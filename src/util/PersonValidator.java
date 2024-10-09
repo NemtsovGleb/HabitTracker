@@ -1,4 +1,4 @@
 package util;
 
-public class PersonValidator { 
+public class PersonValidator {
 }

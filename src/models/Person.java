@@ -57,20 +57,6 @@ public class Person {
         this.email = email;
     }
 
-
-    public static void createPerson() {
-        Person person = new Person();
-        System.out.println("Придумайте логин:");
-        String username = scanner.nextLine();
-
-
-        for(Person p: persons) {
-            if(p.getUsername().equals(username))
-                System.out.println("Аккаунт с таким логином уже существует. Попробуйте другой.");
-        }
-
-    }
-
     static {
         persons.add(new Person("Gleb", "123", "gleb@mail.ru"));
         persons.add(new Person("Sergey", "456", "sergey@mail.ru"));

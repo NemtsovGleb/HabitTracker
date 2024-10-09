@@ -1,5 +1,6 @@
 import models.Person;
 import security.AuthProviderImpl;
+import services.PersonService;
 
 import java.util.Scanner;
 
@@ -25,7 +26,7 @@ public class Main {
                      AuthProviderImpl.authenticate();
                     break;
                 case "2":
-                     Person.createPerson();
+                     PersonService.createPerson();
                     break;
                 case "3":
                     System.out.println("До свидания!");
