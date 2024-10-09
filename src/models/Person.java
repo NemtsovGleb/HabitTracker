@@ -1,12 +1,14 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Person {
+public class Person implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private static final Scanner scanner = new Scanner(System.in);
-    static List<Person> persons = new ArrayList<>();
 
     String username;
 
@@ -14,20 +16,13 @@ public class Person {
 
     String email;
 
-    List<Habit> habits;
+    //List<Habit> habits;
+
 
     public Person(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
-    }
-
-    public static List<Person> getPersons() {
-        return persons;
-    }
-
-    public static void setPersons(List<Person> persons) {
-        Person.persons = persons;
     }
 
     public Person(){}
@@ -57,12 +52,7 @@ public class Person {
         this.email = email;
     }
 
-    static {
-        persons.add(new Person("Gleb", "123", "gleb@mail.ru"));
-        persons.add(new Person("Sergey", "456", "sergey@mail.ru"));
-        persons.add(new Person("Ilya", "789", "ilya@mail.ru"));
-        persons.add(new Person("Andrey", "101112", "andrey@mail.ru"));
-    }
+// Gleb 12345Abc@
 
 
 }

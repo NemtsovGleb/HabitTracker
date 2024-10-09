@@ -1,6 +1,8 @@
 import models.Person;
+import repositories.PeopleRepository;
 import security.AuthProviderImpl;
 import services.PersonService;
+import util.PersonValidator;
 
 import java.util.Scanner;
 
@@ -11,6 +13,11 @@ public class Main {
 
 
     public static void main(String[] args) {
+
+        // инициализация слоев программы
+        PeopleRepository peopleRepository = PeopleRepository.getInstance();
+        PersonService PersonService = new PersonService(peopleRepository);
+
         boolean running = true;
         while (running) {
             System.out.println("\n--- МЕНЮ ---");
@@ -23,10 +30,10 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                     AuthProviderImpl.authenticate();
+                     PersonService.login();
                     break;
                 case "2":
-                     PersonService.createPerson();
+                     PersonService.addPerson();
                     break;
                 case "3":
                     System.out.println("До свидания!");
