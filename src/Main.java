@@ -30,7 +30,8 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                     PersonService.login();
+                     if(PersonService.login())
+                         PersonService.showUserMenu();
                     break;
                 case "2":
                      PersonService.addPerson();

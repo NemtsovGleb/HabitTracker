@@ -69,4 +69,14 @@ public class PeopleRepository {
         return Optional.empty();
     }
 
+    public Optional<Person> findPersonByEmail(String email) {
+        for (Person person : people) {
+            if (person.getEmail().equals(email)) {
+                return Optional.of(person);
+            }
+        }
+        return Optional.empty();
+    }
+
+
 }

@@ -38,17 +38,30 @@ public class PersonValidator {
         return person.isEmpty(); // Возвращаем true, если человек с таким именем не найден
     }
 
+    // Метод проверки уникальности почты
+    public boolean isEmailUnique(String email) {
+        Optional<Person> person = peopleRepository.findPersonByEmail(email);
+        return person.isEmpty(); // возвращаем true, если человек с таким именем не найден
+    }
+
     // Проверка email
     public boolean validateEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
             System.out.println("Ошибка: Email не может быть пустым.");
             return false;
         }
+
         String emailRegex = "^[\\w!#$%&'*+/=?`{|}~^.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$";
         if (!email.matches(emailRegex)) {
             System.out.println("Ошибка: Неверный формат email. Пример: example@domain.com");
             return false;
         }
+
+        if (!isEmailUnique(email)) { // Проверка уникальности логина в базе данных
+            System.out.println("Ошибка: Email '" + email + "' уже занят. Пожалуйста, выберите другой.");
+            return false;
+        }
+
         System.out.println("Email валидный.");
         return true;
     }

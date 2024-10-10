@@ -52,7 +52,7 @@ public class Person implements Serializable {
         this.email = email;
     }
 
-// Gleb 12345Abc@
-
+// Gleb 12345Abc@ glebka.nemtsov@mail.ru
+// Sergey 12345aBc@ sergey.egorov@mail.ru
 
 }
