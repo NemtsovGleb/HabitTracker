@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Person implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private static final Scanner scanner = new Scanner(System.in);
 
     String username;
@@ -16,16 +16,29 @@ public class Person implements Serializable {
 
     String email;
 
-    //List<Habit> habits;
+    List<Habit> habits;
 
 
     public Person(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.habits = new ArrayList<>();
     }
 
     public Person(){}
+
+    public void addHabit(Habit habit) {
+        habits.add(habit);
+    }
+
+    public void removeHabit(Habit habit) {
+        habits.remove(habit);
+    }
+
+    public List<Habit> getHabits() {
+        return habits;
+    }
 
 
     public String getUsername() {

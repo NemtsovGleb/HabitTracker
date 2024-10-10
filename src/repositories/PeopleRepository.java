@@ -60,6 +60,10 @@ public class PeopleRepository {
         people.add(person);
     }
 
+    public void remove(Person person) {
+        people.remove(person);
+    }
+
     public Optional<Person> findPersonByName(String name) {
         for (Person person : people) {
             if (person.getUsername().equalsIgnoreCase(name)) {

@@ -22,7 +22,7 @@ public class AuthProviderImpl {
         Optional<Person> person;
 
         while (true) {
-            System.out.print("Введите логин или exit для выхода: ");
+            System.out.print("\nВведите логин или exit для выхода: ");
             String username = scanner.nextLine().trim();
             if(username.equals("exit"))
                 return false;
@@ -30,23 +30,23 @@ public class AuthProviderImpl {
             if (person.isPresent()) {
                 break; // логин верный
             }
-            System.out.println("Логин введен неправильно, попробуйте еще.");
+            System.out.println("\nЛогин введен неправильно, попробуйте еще.");
         }
 
             Person person1 = person.get();
 
             while(true) {
-                System.out.print("Введите пароль или exit для выхода: ");
+                System.out.print("\nВведите пароль или exit для выхода: ");
                 String password = scanner.nextLine().trim();
                 if(password.equals("exit"))
                     return false;
 
                 if (person1.getPassword().equals(password)) {
-                    System.out.println("Вы успешно вошли в свой аккаунт");
+                    System.out.println("\nВы успешно вошли в свой аккаунт");
                     currentPerson = person1;
                     break; // пароль верный
                 }
-                System.out.println("Пароль введен неправильно, поробуйте еще");
+                System.out.println("\nПароль введен неправильно, поробуйте еще");
             }
             return true;
     }
