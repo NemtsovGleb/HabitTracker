@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PeopleRepository {
-    private static final String FILE_NAME = "people3.db";
+    private static final String FILE_NAME = "people.db";
     private List<Person> people;
 
     private static PeopleRepository instance;
