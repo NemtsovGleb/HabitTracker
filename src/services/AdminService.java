@@ -18,18 +18,28 @@ public class AdminService {
     }
 
 
-    public void showUsers() {
+    public void showUsers(Person currentPerson) {
         people = peopleRepository.getAllPeople();
         boolean status = true;
         while(status) {
 
+            if(people.size() == 1) {
+                System.out.println("Список пользователей пуст");
+            } else {
+                int index = 1;
+                System.out.println("\n Список пользователй:");
+                for (Person person : people) {
 
-            int index = 1;
-            System.out.println("\n Список пользователй:");
-            for (Person person : people) {
+                    if(currentPerson == person)
+                        continue;
 
-                System.out.println(index + ". " + person.getUsername() + " " + person.getRole());
-                index++;
+                    String block = "";
+                    if(person.getIsBlocked())
+                        block = " Заблокирован";
+
+                    System.out.println(index + ". " + person.getUsername() + " " + person.getRole() + block);
+                    index++;
+                }
             }
 
             System.out.println("\n--- Управление ---");
@@ -46,6 +56,7 @@ public class AdminService {
                     removeByName();
                     break;
                 case "2":
+                    blockByName();
                     break;
                 case "3":
                     status = false;
@@ -73,6 +84,27 @@ public class AdminService {
             }
 
             peopleRepository.removeByName(name);
+
+            status = false;
+
+        }
+    }
+
+    public void blockByName() {
+        boolean status = true;
+        while(status) {
+            System.out.println("Напишите имя человека, которого хотите заблокировать или exit если передумали:");
+            String name = scanner.nextLine().trim();
+            if(name.equals("exit"))
+                break;
+
+
+            if(peopleRepository.findPersonByName(name).isEmpty()) {
+                System.out.println("Такого человека нет, попробуйте еще");
+                continue;
+            }
+
+            peopleRepository.blockByName(name);
 
             status = false;
 

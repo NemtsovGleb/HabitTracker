@@ -1,16 +1,10 @@
-import models.Person;
 import repositories.PeopleRepository;
-import security.AuthProviderImpl;
 import services.PersonService;
-import util.PersonValidator;
-
 import java.util.Scanner;
 
 public class Main {
 
     private static final Scanner scanner = new Scanner(System.in);
-
-
 
     public static void main(String[] args) {
 
@@ -37,6 +31,7 @@ public class Main {
                      PersonService.addPerson();
                     break;
                 case "3":
+                    peopleRepository.saveData();
                     System.out.println("До свидания!");
                     running = false;  // Завершаем цикл, чтобы выйти из программы
                     break;

@@ -15,6 +15,8 @@ public class PersonService {
     private final AdminService adminService;
     private Person currentPerson;
 
+    private static final Scanner scanner = new Scanner(System.in);
+
     public PersonService(PeopleRepository peopleRepository) {
         this.peopleRepository = peopleRepository;
         this.personValidator =  new PersonValidator(peopleRepository);
@@ -26,8 +28,9 @@ public class PersonService {
     public void logout() {
         this.currentPerson = null;
     }
-
-    private static final Scanner scanner = new Scanner(System.in);
+    public boolean login() {
+        return authProvider.authenticate();
+    }
 
     public void addPerson() {
         String username;
@@ -90,13 +93,10 @@ public class PersonService {
             peopleRepository.addPerson(newPerson); // Добавляем пользователя в репозиторий
             peopleRepository.saveData(); // Сохраняем изменения в файл
             System.out.println("Пользователь успешно зарегистрирован: " + username);
-
+            break;
         }
     }
 
-    public boolean login() {
-        return authProvider.authenticate();
-    }
 
     public void showUserMenu() {
         boolean loggedIn = true;
@@ -106,14 +106,12 @@ public class PersonService {
             System.out.println("1. Мой профиль");
             System.out.println("2. Выйти из аккаунта");
             System.out.println("3. Удалить свой аккаунт");
-            System.out.println("4. Добавить привычку");
-            System.out.println("5. Просмотреть мои привычки");
-            System.out.println("6. Удалить привычку");
+            System.out.println("4. Управление привычками");
             if(currentPerson.getRole().equals("ADMIN"))
-                System.out.println("7. Управление пользователями");
+                System.out.println("5. Управление пользователями");
 
 
-            System.out.print("Выберите действие (1-7): ");
+            System.out.print("Выберите действие (1-5): ");
 
             String choice = scanner.nextLine().trim();
 
@@ -132,16 +130,10 @@ public class PersonService {
                         System.out.println("Аккаунт был успешно удален");
                     break;
                 case "4":
-                    habitService.addHabit(currentPerson);
-                    break;
-                case "5":
                     habitService.viewHabits(currentPerson);
                     break;
-                case "6":
-                    habitService.removeHabit(currentPerson);
-                    break;
-                case "7":
-                    adminService.showUsers();
+                case "5":
+                    adminService.showUsers(currentPerson);
                 default:
                     System.out.println("Неверный выбор. Пожалуйста повторите попытку.");
             }

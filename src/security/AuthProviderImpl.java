@@ -42,6 +42,12 @@ public class AuthProviderImpl {
                     return false;
 
                 if (person1.getPassword().equals(password)) {
+
+                    if(person1.getIsBlocked()) {
+                        System.out.println("Извините данный аккаунт заблокировн");
+                        return false;
+                    }
+
                     System.out.println("\nВы успешно вошли в свой аккаунт");
                     currentPerson = person1;
                     break; // пароль верный

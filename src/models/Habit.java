@@ -8,11 +8,13 @@ public class Habit implements Serializable {
     private String name;
     private String description;
     private Date createAt;
+    private String frequency;
     private Person owner;
 
-    public Habit(String name, String description, Person owner) {
+    public Habit(String name, String description, String frequency, Person owner) {
         this.name = name;
         this.description = description;
+        this.frequency = frequency;
         this.createAt = new Date();
         this.owner = owner;
     }
@@ -49,4 +51,11 @@ public class Habit implements Serializable {
         this.owner = owner;
     }
 
+    public String getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
+    }
 }

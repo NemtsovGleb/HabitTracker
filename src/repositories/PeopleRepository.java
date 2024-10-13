@@ -78,6 +78,19 @@ public class PeopleRepository {
 
     }
 
+    public void blockByName(String name) {
+
+        for(Person person: people) {
+            if(person.getUsername().equals(name)) {
+                person.setIsBlocked(true);
+                break;
+            }
+        }
+
+        System.out.println("Пользователь был успешно заблокирован!");
+
+    }
+
     public Optional<Person> findPersonByName(String name) {
         for (Person person : people) {
             if (person.getUsername().equalsIgnoreCase(name)) {

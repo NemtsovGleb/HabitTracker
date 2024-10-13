@@ -10,11 +10,12 @@ public class Person implements Serializable {
     private static final long serialVersionUID = 2L;
     private static final Scanner scanner = new Scanner(System.in);
 
-    String username;
-    String password;
-    String email;
-    String role;
-    List<Habit> habits;
+    private String username;
+    private String password;
+    private String email;
+    private String role;
+    private boolean isBlocked;
+    private List<Habit> habits;
 
 
 
@@ -23,6 +24,7 @@ public class Person implements Serializable {
         this.password = password;
         this.email = email;
         this.role = role;
+        this.isBlocked = false;
         this.habits = new ArrayList<>();
     }
 
@@ -39,7 +41,6 @@ public class Person implements Serializable {
     public List<Habit> getHabits() {
         return habits;
     }
-
 
     public String getUsername() {
         return username;
@@ -73,7 +74,14 @@ public class Person implements Serializable {
         this.role = role;
     }
 
-// Gleb 12345Abc@ glebka.nemtsov@mail.ru
-// Sergey 12345aBc@ sergey.egorov@mail.ru
+    public boolean getIsBlocked() {
+        return isBlocked;
+    }
+
+    public void setIsBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
+
 
 }
