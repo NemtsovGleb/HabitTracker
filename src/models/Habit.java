@@ -1,7 +1,9 @@
 package models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Habit implements Serializable {
 
@@ -10,6 +12,7 @@ public class Habit implements Serializable {
     private Date createAt;
     private String frequency;
     private Person owner;
+    private List<Date> completionDates; // хранение истории выполнения
 
     public Habit(String name, String description, String frequency, Person owner) {
         this.name = name;
@@ -17,6 +20,7 @@ public class Habit implements Serializable {
         this.frequency = frequency;
         this.createAt = new Date();
         this.owner = owner;
+        this.completionDates = new ArrayList<>();
     }
 
     public String getName() {
@@ -57,5 +61,17 @@ public class Habit implements Serializable {
 
     public void setFrequency(String frequency) {
         this.frequency = frequency;
+    }
+
+    public List<Date> getCompletionDates() {
+        return completionDates;
+    }
+
+    public void addCompletionDate(Date date) {
+        this.completionDates.add(date);
+    }
+
+    public void removeCompletionDate(Date date) {
+        this.completionDates.remove(date);
     }
 }

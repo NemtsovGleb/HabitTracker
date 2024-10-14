@@ -3,10 +3,8 @@ package services;
 import models.Habit;
 import models.Person;
 import repositories.PeopleRepository;
-
-import java.sql.SQLOutput;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class HabitService {
     private final PeopleRepository peopleRepository;
@@ -37,9 +35,14 @@ public class HabitService {
             System.out.println("2. Посмотреь статистику по привычке");
             System.out.println("3. Удалить привычку");
             System.out.println("4. Редактировать привычку");
-            System.out.println("5. Вернуться");
+            System.out.println("5. Отметить выполнение привычки");
+            System.out.println("6. Показать статистику привычек за неделю");
+            System.out.println("7. Показать текущую серию выполнения привычек");
+            System.out.println("8. Фильтрация привычек по дате создания");
+            System.out.println("9. Фильтрация привычек по статусу выполнения");
+            System.out.println("10. Вернуться");
 
-            System.out.print("Выберите действие (1-4): ");
+            System.out.print("Выберите действие (1-10): ");
 
             String choice = scanner.nextLine().trim();
 
@@ -56,6 +59,21 @@ public class HabitService {
                     editHabit(currentPerson);
                     break;
                 case "5":
+                    completeHabit(currentPerson);
+                    break;
+                case "6":
+                    generateHabitStats(currentPerson, 7);
+                    break;
+                case "7":
+                    calculateStreak(currentPerson);
+                    break;
+                case "8":
+                    filterHabitsByCreationDate(currentPerson);
+                    break;
+                case "9":
+                    filterHabitsByCompletionStatus(currentPerson);
+                    break;
+                case "10":
                     break outer;
                 default:
                     System.out.println("Неверный выбор. Пожалуйста повторите попытку.");
@@ -242,4 +260,126 @@ public class HabitService {
         peopleRepository.saveData();  // Сохраняем изменения в базе данных
     }
 
+    // Метод для отметки выполнения привычки
+    public void completeHabit(Person person) {
+        List<Habit> habit = person.getHabits();
+
+        if(habits.isEmpty()) {
+            System.out.println("Нет привычек для выполнения.");
+            return;
+        }
+
+        System.out.println("Выберите привчку для отметки выполнения: ");
+
+        for(int i = 0; i < habit.size(); i++)
+            System.out.println((i+1) + ". " +  habits.get(i).getName());
+
+
+        int choice = scanner.nextInt();
+        if(choice < 1 || choice > habits.size()) {
+            System.out.println("Неверный выбор!");
+            return;
+        }
+
+        Habit habitToComplete = habits.get(choice - 1);
+        habitToComplete.addCompletionDate(new Date());
+        System.out.println("Привычка \"" + habitToComplete.getName() + "\" отмечена как выполненная!");
+        peopleRepository.saveData();  // Сохраняем изменения
+    }
+
+    // Генерация статистики выполнения за указанный период (например, за последние 7 дней)
+    public void generateHabitStats(Person person, int days) {
+        List<Habit> habits = person.getHabits();
+
+        if (habits.isEmpty()) {
+            System.out.println("Нет привычек для анализа.");
+            return;
+        }
+
+        Date currentDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_YEAR, -days);
+        Date startDate = calendar.getTime();
+
+        System.out.println("\n--- Статистика выполнения привычек за последние " + days + " дней ---");
+        for (Habit habit : habits) {
+            long count = habit.getCompletionDates().stream()
+                    .filter(date -> date.after(startDate))
+                    .count();
+            System.out.println("Привычка: " + habit.getName() + " - выполнено " + count + " раз(а)");
+        }
+    }
+
+    // Подсчет текущей серии выполнения (streak) для привычки
+    public void calculateStreak(Person person) {
+        List<Habit> habits = person.getHabits();
+
+        if (habits.isEmpty()) {
+            System.out.println("Нет привычек для анализа.");
+            return;
+        }
+
+        System.out.println("\n--- Текущие серии выполнения привычек ---");
+        for (Habit habit : habits) {
+            List<Date> completionDates = habit.getCompletionDates().stream()
+                    .sorted(Comparator.reverseOrder())
+                    .collect(Collectors.toList());
+
+            if (completionDates.isEmpty()) {
+                System.out.println("Привычка: " + habit.getName() + " - нет данных по выполнению.");
+                continue;
+            }
+
+            int streak = 1;  // Минимальная серия - 1 день
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+
+            for (int i = 1; i < completionDates.size(); i++) {
+                calendar.setTime(completionDates.get(i - 1));
+                calendar.add(Calendar.DAY_OF_YEAR, -1);  // Ожидаем, что выполнение на следующий день
+
+                if (!calendar.getTime().equals(completionDates.get(i))) {
+                    break;  // Если нет выполнения на следующий день, серия прерывается
+                }
+
+                streak++;
+            }
+
+            System.out.println("Привычка: " + habit.getName() + " - текущая серия выполнения: " + streak + " день(дней)");
+        }
+    }
+
+    // Фильтрация по дате создания
+    public void filterHabitsByCreationDate(Person person) {
+        List<Habit> habits = person.getHabits();
+
+        if (habits.isEmpty()) {
+            System.out.println("Нет привычек для фильтрации.");
+            return;
+        }
+
+        System.out.println("Фильтрация привычек по дате создания (новые привычки):");
+        habits.stream()
+                .sorted(Comparator.comparing(Habit::getCreateAt).reversed())  // Сортировка по дате
+                .forEach(habit -> System.out.println(habit.getName() + " (дата создания: " + habit.getCreateAt() + ")"));
+    }
+
+    // Фильтрация по статусу выполнения
+    public void filterHabitsByCompletionStatus(Person person) {
+        List<Habit> habits = person.getHabits();
+
+        if (habits.isEmpty()) {
+            System.out.println("Нет привычек для фильтрации.");
+            return;
+        }
+
+        System.out.println("Фильтрация привычек по статусу выполнения:");
+        habits.stream()
+                .filter(habit -> !habit.getCompletionDates().isEmpty())  // Только выполненные привычки
+                .forEach(habit -> System.out.println(habit.getName() + " (выполнено " + habit.getCompletionDates().size() + " раз(а))"));
+    }
+
 }
+
+
