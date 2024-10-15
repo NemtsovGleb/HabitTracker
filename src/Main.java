@@ -20,7 +20,7 @@ public class Main {
             System.out.println("3. Выйти из программы");
             System.out.print("Выберите действие (1, 2 или 3): ");
 
-            String choice = scanner.nextLine().trim(); 
+            String choice = scanner.nextLine().trim();
 
             switch (choice) {
                 case "1":
