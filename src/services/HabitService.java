@@ -25,24 +25,23 @@ public class HabitService {
             } else {
                 System.out.println("\n--- Ваши привычки ---");
                 for (Habit habit : habits) {
-                    System.out.println("Название: " + habit.getName() + "\nОписание: " + habit.getDescription() + "\nДата создания: " + habit.getCreateAt());
+                    System.out.println("Название: " + habit.getName() + "\nОписание: " + habit.getDescription() + "\nДата создания: " + habit.getFormatCreateAt());
                     System.out.println("---------------");
                 }
             }
 
             System.out.println("\n--- Управление ---");
             System.out.println("1. Добавить привычку");
-            System.out.println("2. Посмотреь статистику по привычке");
-            System.out.println("3. Удалить привычку");
-            System.out.println("4. Редактировать привычку");
-            System.out.println("5. Отметить выполнение привычки");
-            System.out.println("6. Показать статистику привычек за неделю");
-            System.out.println("7. Показать текущую серию выполнения привычек");
-            System.out.println("8. Фильтрация привычек по дате создания");
-            System.out.println("9. Фильтрация привычек по статусу выполнения");
-            System.out.println("10. Вернуться");
+            System.out.println("2. Удалить привычку");
+            System.out.println("3. Редактировать привычку");
+            System.out.println("4. Отметить выполнение привычки");
+            System.out.println("5. Показать статистику привычек за определенный период(день, неделя, месяц)");
+            System.out.println("6. Показать текущую серию выполнения привычек");
+            System.out.println("7. Фильтрация привычек по дате создания");
+            System.out.println("8. Фильтрация привычек по статусу выполнения");
+            System.out.println("9. Вернуться");
 
-            System.out.print("Выберите действие (1-10): ");
+            System.out.print("Выберите действие (1-9): ");
 
             String choice = scanner.nextLine().trim();
 
@@ -51,29 +50,27 @@ public class HabitService {
                     addHabit(currentPerson);
                     break;
                 case "2":
-                    break;
-                case "3":
                     removeHabit(currentPerson);
                     break;
-                case "4":
+                case "3":
                     editHabit(currentPerson);
                     break;
-                case "5":
+                case "4":
                     completeHabit(currentPerson);
                     break;
-                case "6":
-                    generateHabitStats(currentPerson, 7);
+                case "5":
+                    generateHabitStats(currentPerson);
                     break;
-                case "7":
+                case "6":
                     calculateStreak(currentPerson);
                     break;
-                case "8":
+                case "7":
                     filterHabitsByCreationDate(currentPerson);
                     break;
-                case "9":
+                case "8":
                     filterHabitsByCompletionStatus(currentPerson);
                     break;
-                case "10":
+                case "9":
                     break outer;
                 default:
                     System.out.println("Неверный выбор. Пожалуйста повторите попытку.");
@@ -82,7 +79,7 @@ public class HabitService {
     }
 
     public void addHabit(Person person) {
-        System.out.print("Введите название новой привычки или exit если передумали: ");
+        System.out.print("\nВведите название новой привычки или exit если передумали: ");
         String name = scanner.nextLine().trim();
         if(name.equals("exit"))
             return;
@@ -126,8 +123,8 @@ public class HabitService {
     }
 
     public void editHabit(Person person) {
-        boolean status = true;
-        while(status) {
+
+        while(true) {
             System.out.println("\n--- РЕДАКТОР ПРИВЫЧЕК: ---");
             System.out.println("--- Ваши привычки ---");
             for (int i = 0; i < habits.size(); i++)
@@ -141,19 +138,17 @@ public class HabitService {
 
             int intChoice = Integer.parseInt(choice);
 
-            if (intChoice < 1 || intChoice > habits.size())
+            if (intChoice < 1 || intChoice > habits.size()) {
                 System.out.println("Неверный выбор, попробуйте еще!");
-
+                continue;
+            }
             Habit habitToEdit = habits.get(intChoice - 1);
 
-            if(!showEditMenu(habitToEdit))
-                continue;
-
-
+            showEditMenu(habitToEdit);
         }
     }
 
-    private boolean showEditMenu(Habit habit) {
+    private void showEditMenu(Habit habit) {
 
         while(true) {
             System.out.println("\nИнформация о привычке:");
@@ -165,7 +160,7 @@ public class HabitService {
             String choice = scanner.nextLine().trim();
 
             if(choice.equals("exit"))
-                return false;
+                return;
 
             switch(choice) {
                 case "1":
@@ -180,8 +175,6 @@ public class HabitService {
                 default:
                     System.out.println("Неверный выбор. Пожалуйста повторите попытку.");
             }
-
-
         }
     }
 
@@ -274,8 +267,10 @@ public class HabitService {
         for(int i = 0; i < habit.size(); i++)
             System.out.println((i+1) + ". " +  habits.get(i).getName());
 
-
         int choice = scanner.nextInt();
+        // "Очистка" новой строки после nextInt()
+        scanner.nextLine();  // Считываем остаточный \n
+
         if(choice < 1 || choice > habits.size()) {
             System.out.println("Неверный выбор!");
             return;
@@ -287,8 +282,30 @@ public class HabitService {
         peopleRepository.saveData();  // Сохраняем изменения
     }
 
-    // Генерация статистики выполнения за указанный период (например, за последние 7 дней)
-    public void generateHabitStats(Person person, int days) {
+    // Генерация статистики выполнения за указанный период (например неделя)
+    public void generateHabitStats(Person person) {
+        System.out.println("Выберите период для статистики:");
+        System.out.println("1. День");
+        System.out.println("2. Неделя");
+        System.out.println("3. Месяц");
+        String choice = scanner.nextLine().trim();
+
+        int days;
+        switch (choice) {
+            case "1":
+                days = 1;
+                break;
+            case "2":
+                days = 7;
+                break;
+            case "3":
+                days = 30;
+                break;
+            default:
+                System.out.println("Неверный выбор!");
+                return;
+        }
+
         List<Habit> habits = person.getHabits();
 
         if (habits.isEmpty()) {
@@ -355,14 +372,14 @@ public class HabitService {
         List<Habit> habits = person.getHabits();
 
         if (habits.isEmpty()) {
-            System.out.println("Нет привычек для фильтрации.");
+            System.out.println("\nНет привычек для фильтрации.");
             return;
         }
 
-        System.out.println("Фильтрация привычек по дате создания (новые привычки):");
+        System.out.println("\nФильтрация привычек по дате создания (новые привычки):");
         habits.stream()
                 .sorted(Comparator.comparing(Habit::getCreateAt).reversed())  // Сортировка по дате
-                .forEach(habit -> System.out.println(habit.getName() + " (дата создания: " + habit.getCreateAt() + ")"));
+                .forEach(habit -> System.out.println(habit.getName() + " (дата создания: " + habit.getFormatCreateAt() + ")"));
     }
 
     // Фильтрация по статусу выполнения
@@ -370,11 +387,11 @@ public class HabitService {
         List<Habit> habits = person.getHabits();
 
         if (habits.isEmpty()) {
-            System.out.println("Нет привычек для фильтрации.");
+            System.out.println("\nНет привычек для фильтрации.");
             return;
         }
 
-        System.out.println("Фильтрация привычек по статусу выполнения:");
+        System.out.println("\nФильтрация привычек по статусу выполнения:");
         habits.stream()
                 .filter(habit -> !habit.getCompletionDates().isEmpty())  // Только выполненные привычки
                 .forEach(habit -> System.out.println(habit.getName() + " (выполнено " + habit.getCompletionDates().size() + " раз(а))"));

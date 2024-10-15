@@ -1,6 +1,7 @@
 package models;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,6 +44,13 @@ public class Habit implements Serializable {
         return createAt;
     }
 
+    public String getFormatCreateAt() {
+        // Создаем форматтер с кастомным форматом
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM yyyy HH:mm:ss");
+
+        // Применяем форматтер к дате
+        return formatter.format(createAt);
+    }
     public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
