@@ -277,9 +277,33 @@ public class HabitService {
         }
 
         Habit habitToComplete = habits.get(choice - 1);
+
+        // Проверка последней даты выполнения привычки
+        List<Date> completionDates = habitToComplete.getCompletionDates();
+        if (!completionDates.isEmpty()) {
+            // Получаем последнюю дату выполнения
+            Date lastCompletionDate = completionDates.get(completionDates.size() - 1);
+
+            // Начало текущего дня
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Date startOfDay = calendar.getTime();
+
+            // Если привычка уже выполнена сегодня
+            if (lastCompletionDate.after(startOfDay)) {
+                System.out.println("Привычка уже была отмечена как выполненная сегодня.");
+                return;
+            }
+        }
+
+        // Добавляем сегодняшнюю дату как дату выполнения
         habitToComplete.addCompletionDate(new Date());
         System.out.println("Привычка \"" + habitToComplete.getName() + "\" отмечена как выполненная!");
         peopleRepository.saveData();  // Сохраняем изменения
+
     }
 
     // Генерация статистики выполнения за указанный период (например неделя)
